@@ -1,6 +1,5 @@
 <div align="center">
   <h1>Hi there, I'm Phattaradit! 🌸</h1>
-  <p><i>The Cute SysAdmin & 2nd-Year Computer Engineering Student at RMUTP</i> 💻✨</p>
 </div>
 
 Welcome to my little corner of GitHub! I am deeply passionate about System Administration, Web Development, and building cool infrastructures. I love turning complex logic into beautiful, functional systems while keeping things aesthetically pleasing. 🎀

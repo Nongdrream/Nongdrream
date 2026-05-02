@@ -7,7 +7,6 @@ Welcome to my little corner of GitHub! I am deeply passionate about System Admin
 
 ### 🎀 About Me
 - 🔭 I’m currently studying **Computer Engineering** at Rajamangala University of Technology Phra Nakhon (RMUTP).
-- 🏆 I'm incredibly honored to be a **Gold & Silver medalist** in national coding competitions!
 - ☁️ I thrive on configuring servers, working with Linux, and deploying Home Lab Servers with Hardware-backed Security.
 - 🚁 In my free time, I love flying drones, managing live stream productions (OB), and tinkering with AI models!
 - 🧠 **MBTI:** ISTP – a logical, adaptable solver who loves diving into hands-on projects.

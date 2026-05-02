@@ -30,11 +30,6 @@ Welcome to my little corner of GitHub! I am deeply passionate about System Admin
   <img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white" alt="OpenCV" />
 </p>
 
-### 📊 GitHub Stats:
-<p align="left">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Nongdrream&layout=compact&theme=dark&hide_border=true" alt="Top Languages" />
-</p>
-
 ### 💖 My Current Status
 <div align="center">
   <a href="https://discord.com/users/693671896717328384">

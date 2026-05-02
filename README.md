@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="https://phattaradit.dev/assets/images/cinnamoroll_dance.webp" alt="Cinnamoroll" width="120" />
   <h1>Hi there, I'm Phattaradit! 🌸</h1>
 </div>
 
@@ -45,4 +46,5 @@ Welcome to my little corner of GitHub! I am deeply passionate about System Admin
 
 <p align="center">
   <i>"Code with Heart, Deploy with Logic." 🌸</i>
+  <img src="https://media.tenor.com/PZcI9HjB884AAAAi/cinnamoroll-sanrio.gif" width="100" />
 </p>

@@ -10,95 +10,76 @@ function rows(list) {
   return list;
 }
 
-// ── the mascot: a blue cat on inline skates ─────────────────────────────────
-const CAT = {
-  o: C.ink, b: C.cat, d: C.catShade, l: C.catLight, w: C.white, p: C.pink, e: C.ink, h: C.white,
-  n: C.pink, m: C.ink, r: C.red, R: '#B8323A', s: C.orange, S: C.orangeDeep, k: C.ink, g: C.curb, y: C.yellow,
-};
+// ── the mascot: a white floppy-eared pup floating in a swim ring ───────────
+const PUP = { o: C.ink, w: C.white, e: C.ink, h: C.white, p: C.pink, m: C.ink, R: '#FF4FA0', S: '#C2185B', W: C.white };
 
-const CAT_HEAD = rows([
-  '..oo..............oo..',
-  '.obbo............obbo.',
-  '.obpbo..........obpbo.',
-  '.obppboooooooooobppbo.',
-  '.oblbbbbbbbbbbbbbbbbo.',
-  'obllbbbbbbbbbbbbbbbbdo',
-  'oblbbbbbbbbbbbbbbbbbdo',
-  'obbbbbhebbbbbbhebbbbdo',
-  'obbbbbeebbbbbbeebbbbdo',
-  'obbbppbbbbnnbbbbppbbdo',
-  'obbbbbbbbmbbmbbbbbbbdo',
-  '.obbbbbbbbmmbbbbbbbdo.',
-  '..oddbbbbbbbbbbbbddo..',
+const PUP_HEAD = [
+  rows([
+    '........oooooooooooo........',
+    '......oowwwwwwwwwwwwoo......',
+    '.....owwwwwwwwwwwwwwwwo.....',
+    '....owwwwwwwwwwwwwwwwwwo....',
+    '.ooowwwwwwwwwwwwwwwwwwwwooo.',
+    'owwwwwwwwwwwwwwwwwwwwwwwwwwo',
+    'owwwwwwwwehwwwwwehwwwwwwwwwo',
+    'owwwwwwwweewwwwweewwwwwwwwwo',
+    '.owwwwwwppwwwmmwwwppwwwwwwo.',
+    '..owwwwwwwwwwwwwwwwwwwwwwo..',
+  ]),
+  // ears flap up a little
+  rows([
+    '........oooooooooooo........',
+    '......oowwwwwwwwwwwwoo......',
+    '.....owwwwwwwwwwwwwwwwo.....',
+    'oooo.owwwwwwwwwwwwwwwwo.oooo',
+    'owwwoowwwwwwwwwwwwwwwwoowwwo',
+    '.owwwwwwwwwwwwwwwwwwwwwwwwo.',
+    '..owwwwwwehwwwwwehwwwwwwwo..',
+    '..owwwwwweewwwwweewwwwwwwo..',
+    '..owwwwwppwwwmmwwwppwwwwwo..',
+    '..owwwwwwwwwwwwwwwwwwwwwwo..',
+  ]),
+];
+
+const RING = rows([
+  '...oRRRRWWRRRRRRRRWWRRRRo...',
+  '..oRRRRRWWRRRRRRRRWWRRRRRo..',
+  '..oRRRRRWWRRRRRRRRWWRRRRRo..',
+  '...oSSSSWWSSSSSSSSWWSSSSo...',
+  '....oooooooooooooooooooo....',
 ]);
 
-// Body + skates. Two frames so the legs push off like skating strides.
-const CAT_BODY = [
-  rows([
-    '...orrrrrrrrrrrrrrro..',
-    '...oRrrrrrrrrrrrrrRo..',
-    '..obbowwwwwwwwwwobbo..',
-    '..obbowwwwwwwwwwobbo..',
-    '...oobwwwwwwwwwwboo...',
-    '....obbbbbbbbbbbbo....',
-    '....obbbo....obbbo....',
-    '...osssso....osssso...',
-    '...oSSSSo....oSSSSo...',
-    '...kgkgk.....kgkgk....',
-  ]),
-  rows([
-    '...orrrrrrrrrrrrrrro..',
-    '...oRrrrrrrrrrrrrrRo..',
-    '..obbowwwwwwwwwwobbo..',
-    '..obbowwwwwwwwwwobbo..',
-    '...oobwwwwwwwwwwboo...',
-    '....obbbbbbbbbbbbo....',
-    '.....obbbo..obbbo.....',
-    '....osssso..osssso....',
-    '....oSSSSo..oSSSSo....',
-    '....kgkgk...kgkgk.....',
-  ]),
-];
-
-// Scarf tail fluttering behind (to the left).
-const TAILS = [
-  rows(['.rrro', 'rrRo.', '.ro..']),
-  rows(['rrrro', '.rRRo', '..ro.']),
-];
-
+// Same 28×25 box the old mascot used, so every caller keeps its offsets.
 export function cat(frame = 0) {
   const px = new Px(28, 25);
-  px.stamp(6, 0, CAT_HEAD, CAT);
-  px.stamp(6, 13, CAT_BODY[frame % 2], CAT);
-  px.stamp(4 + (frame % 2), 14, TAILS[frame % 2], CAT);
+  px.stamp(0, 10, PUP_HEAD[frame % 2], PUP);
+  px.stamp(0, 20, RING, PUP);
   return px;
 }
 
 // Just the face, for the avatar.
 export function catFace() {
-  const px = new Px(22, 15);
-  px.stamp(0, 0, CAT_HEAD, CAT);
-  px.stamp(3, 13, rows(['.orrrrrrrrrrrrrrro', '.oRrrrrrrrrrrrrrRo']), CAT);
+  const px = new Px(28, 15);
+  px.stamp(0, 0, PUP_HEAD[0], PUP);
+  px.stamp(0, 10, RING, PUP);
   return px;
 }
 
 // ── scenery ─────────────────────────────────────────────────────────────────
+// A rubber duck bobbing on the waves (takes the place of the old traffic cones).
 export function cone() {
-  return new Px(11, 13).stamp(0, 0, rows([
-    '....oo.....',
-    '...osso....',
-    '...osso....',
-    '..owwwwo...',
-    '..owwwwo...',
-    '..ossSSo...',
-    '.ossssSSo..',
-    '.owwwwwwo..',
-    'owwwwwwwwo.',
-    'ossssssSSo.',
-    'ooooooooooo',
-    'oSSSSSSSSSo',
-    'ooooooooooo',
-  ]), { o: C.ink, s: C.orange, S: C.orangeDeep, w: C.white });
+  return new Px(11, 13).stamp(0, 3, rows([
+    '...ooo.....',
+    '..oyyyo....',
+    '..oyeyoo...',
+    '..oyyyoSSo.',
+    '...oyyoo...',
+    'oo.oyyyo...',
+    'oyooyyyyo..',
+    'oyyyyyyyyo.',
+    '.oyyyyyyo..',
+    '..oooooo...',
+  ]), { o: C.ink, y: C.yellow, e: C.ink, S: C.orange });
 }
 
 export function cloud(color = C.white, shade = C.mist) {

@@ -21,6 +21,10 @@ export const C = {
   cat: '#FFFFFF',
   catShade: '#FFB3D1',
   catLight: '#FFFFFF',
+  // the sea
+  sea: '#9ADCF5',
+  seaDeep: '#5FBDE6',
+  foam: '#E8F8FF',
   // the road
   road: '#2A2A2E',
   roadDark: '#151517',

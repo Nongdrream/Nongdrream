@@ -121,14 +121,14 @@ export async function skateLog(profile, { today }) {
 
   const dayLabels = [['mon', 1], ['wed', 3], ['fri', 5]].map(([l, r]) => text(l, { x: X0 - 14, y: Y0 + r * STEP + 9, size: 11, fill: C.inkSoft, anchor: 'end' })).join('');
 
-  // the cat skates the top lane; a soft highlight follows it down the grid
+  // the pup floats down the top lane; a soft highlight follows it down the grid
   const DUR = 24;
   const LANE = 104;
   const S = 2;
   const c = cone();
-  const lane = `<rect x="22" y="${LANE}" width="848" height="3" fill="${C.curb}"/>
+  const lane = `<rect x="22" y="${LANE - 4}" width="848" height="8" rx="4" fill="${C.sea}"/>
 ${[0.18, 0.43, 0.68, 0.9].map((f) => c.svg(X0 + gridW * f, LANE - c.h * S + 1, S)).join('')}`;
-  const kitty = `<g>${cat(0).svg(-28, LANE - 25 * S + 1, S)}${cycle('opacity', [1, 0], 0.5)}</g><g opacity="0">${cat(1).svg(-28, LANE - 25 * S + 1, S)}${cycle('opacity', [0, 1], 0.5)}</g>`;
+  const kitty = `<g>${cat(0).svg(-28, LANE - 25 * S + 1, S)}${cycle('opacity', [1, 0], 1.2)}</g><g opacity="0">${cat(1).svg(-28, LANE - 25 * S + 1, S)}${cycle('opacity', [0, 1], 1.2)}</g>`;
   const ride = `<animateTransform attributeName="transform" type="translate" values="${X0 - 40} 0;${X0 + gridW + 40} 0" dur="${DUR}s" repeatCount="indefinite"/>`;
   const glow = `<clipPath id="grid"><rect x="${X0 - 2}" y="${Y0 - 6}" width="${gridW + 4}" height="${7 * STEP + 8}"/></clipPath><g clip-path="url(#grid)"><g><rect x="-6" y="${Y0 - 4}" width="${CELL + 12}" height="${7 * STEP + 4}" rx="6" fill="${C.sky}" opacity=".22"/>${ride}</g></g>`;
 
@@ -148,7 +148,7 @@ ${text(value, { x: x + w - 14, y: SY + 23, size: 15, weight: 700, fill: C.blue, 
   const pills = pill('TOTAL', total.toLocaleString('en-US'), X0, pw) + pill('LONGEST', `${longest} day${longest === 1 ? '' : 's'}`, X0 + pw + 12, pw) + pill('CURRENT', `${current} day${current === 1 ? '' : 's'}`, X0 + (pw + 12) * 2, pw);
 
   const body = `${panel(2, 24, 888, H - 34)}
-${tab(24, 4, 'SKATE LOG')}
+${tab(24, 4, 'SWIM LOG')}
 ${text(`@${profile.login} · contributions, last 12 months`, { x: 862, y: 52, size: 13, fill: C.inkSoft, anchor: 'end' })}
 ${lane}
 ${glow}
@@ -160,8 +160,8 @@ ${legend}
 ${pills}`;
 
   return doc(W, H, {
-    title: `${profile.name} — skate log`,
-    desc: `Skate log — ${total} GitHub contributions in the last year, longest streak ${longest} days, current streak ${current} days. The white cat skates along the top of the calendar.`,
+    title: `${profile.name} — swim log`,
+    desc: `Swim log — ${total} GitHub contributions in the last year, longest streak ${longest} days, current streak ${current} days. The white pup floats along the top of the calendar.`,
     body,
   });
 }

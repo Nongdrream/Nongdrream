@@ -1,7 +1,7 @@
-// The banner: name, typewriter, the season's sky over a Bangkok skyline, and the
-// cat slaloming through cones. Redrawn daily so the season and birthday flip on time.
+// The banner: name, typewriter, the season's sky over the open sea, and the
+// pup floating in its swim ring. Redrawn daily so the season and birthday flip on time.
 import { pixelText, round, textStops } from '../lib/pixel.mjs';
-import { bird, cat, cloud, cone, sparkle, skyline, sun } from '../lib/sprites.mjs';
+import { bird, cat, cloud, cone, sparkle, sun } from '../lib/sprites.mjs';
 import { cycle, doc, esc } from '../lib/svg.mjs';
 import { C } from '../lib/theme.mjs';
 
@@ -11,7 +11,7 @@ const X0 = 2;
 const Y0 = 2;
 const PW = 890;
 const PH = 308;
-const ROAD = 238; // top of the curb
+const ROAD = 238; // the horizon
 
 const SEASONS = {
   cool: { label: 'COOL SEASON', sky: ['#C9E3FF', '#F4F8FD'], far: '#D3E4F7', farLight: '#E8F1FB' },
@@ -88,45 +88,40 @@ function weather(season) {
   return `${sun(9).svg(668, 52, 4)}${clouds(season)}${birds}`;
 }
 
-// ── the road and the slalom ─────────────────────────────────────────────────
-function road(season) {
-  const dash = `<pattern id="dash" width="64" height="8" patternUnits="userSpaceOnUse"><rect width="32" height="6" fill="${C.paper}" opacity=".85"/></pattern>`;
-  let svg = `${dash}<rect x="0" y="${ROAD}" width="${W}" height="8" fill="${C.curb}"/>
-<rect x="0" y="${ROAD + 8}" width="${W}" height="${H - ROAD}" fill="${C.road}"/>
-<rect x="0" y="${ROAD + 8}" width="${W}" height="4" fill="${C.roadDark}"/>
-<g><rect x="-64" y="${ROAD + 46}" width="${W + 128}" height="6" fill="url(#dash)"/><animateTransform attributeName="transform" type="translate" from="0 0" to="-64 0" dur=".55s" repeatCount="indefinite"/></g>`;
+// ── the sea ─────────────────────────────────────────────────────────────────
+// a strip of scalloped foam that scrolls sideways forever
+export function waves(y, w, { dur = 3, color = C.foam, op = 1 } = {}) {
+  const bump = `<pattern id="wv${y}" width="48" height="12" patternUnits="userSpaceOnUse"><path class="smooth" d="M0 12 Q12 0 24 12 Q36 0 48 12 Z" fill="${color}"/></pattern>`;
+  return `${bump}<g opacity="${op}"><rect x="-48" y="${y - 12}" width="${w + 96}" height="12" fill="url(#wv${y})"/><animateTransform attributeName="transform" type="translate" from="0 0" to="48 0" dur="${dur}s" repeatCount="indefinite"/></g>`;
+}
+
+function sea(season) {
+  let svg = `<rect x="0" y="${ROAD}" width="${W}" height="${H - ROAD}" fill="${C.sea}"/>
+<rect x="0" y="${ROAD + 40}" width="${W}" height="${H - ROAD}" fill="${C.seaDeep}" opacity=".45"/>
+${waves(ROAD + 4, W, { dur: 5, color: C.foam })}
+${[[120, 262], [380, 300], [640, 270], [820, 296]].map(([x, y], i) => `<rect x="${x}" y="${y}" width="26" height="3" fill="${C.foam}" opacity=".8"><animate attributeName="opacity" values=".8;.1;.8" dur="2.4s" begin="${i * 0.5}s" repeatCount="indefinite"/></rect>`).join('')}`;
   if (season === 'rainy') {
-    svg += [[140, 268], [470, 296], [800, 262]].map(([x, y], i) => `<ellipse class="smooth" cx="${x}" cy="${y}" rx="6" ry="2" fill="none" stroke="${C.pale}" stroke-width="2"><animate attributeName="rx" values="4;22" dur="1.4s" begin="${i * 0.45}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.4s" begin="${i * 0.45}s" repeatCount="indefinite"/></ellipse>`).join('');
+    svg += [[140, 268], [470, 296], [800, 262]].map(([x, y], i) => `<ellipse class="smooth" cx="${x}" cy="${y}" rx="6" ry="2" fill="none" stroke="${C.foam}" stroke-width="2"><animate attributeName="rx" values="4;22" dur="1.4s" begin="${i * 0.45}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.4s" begin="${i * 0.45}s" repeatCount="indefinite"/></ellipse>`).join('');
   }
   return svg;
 }
 
-function slalom() {
-  const S = 4;
-  const GAP = 180; // between cones
-  const T = 1.6; // seconds per cone
-  const CX = 690; // cat centre
-  const LANE = 292; // where cones stand
+function float() {
+  const S = 6;
+  const CX = 700; // pup centre
+  const LANE = 292; // waterline the ring sits in
   const c = cone();
-  const coneW = c.w * S;
-  const cones = [];
-  for (let x = CX - GAP * 4; x <= W + GAP; x += GAP) cones.push(c.svg(x - coneW / 2, LANE - c.h * S, S));
-  const coneRow = `<g>${cones.join('')}<animateTransform attributeName="transform" type="translate" from="0 0" to="${-GAP} 0" dur="${T}s" repeatCount="indefinite"/></g>`;
-
-  // two frames of skating legs
-  const kitty = (dy) => {
-    const f0 = cat(0).svg(CX - 14 * S, LANE - 25 * S + dy, S);
-    const f1 = cat(1).svg(CX - 14 * S, LANE - 25 * S + dy, S);
-    return `<g>${f0}<animate attributeName="opacity" values="1;0" dur=".5s" calcMode="discrete" repeatCount="indefinite"/></g><g opacity="0">${f1}<animate attributeName="opacity" values="0;1" dur=".5s" calcMode="discrete" repeatCount="indefinite"/></g>`;
-  };
-  // The cat swings in front of one cone and behind the next. Two copies, one on
-  // each side of the cones in the drawing order, take turns being visible.
-  const A = 9;
-  const swing = `<animateTransform attributeName="transform" type="translate" values="0 ${A};0 0;0 ${-A};0 0;0 ${A}" keyTimes="0;.25;.5;.75;1" dur="${T * 2}s" calcMode="spline" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.4 0 .6 1" repeatCount="indefinite"/>`;
-  const shadowEl = `<ellipse class="smooth" cx="${CX}" cy="${LANE + 2}" rx="40" ry="5" fill="${C.roadDark}" opacity=".6">${swing}</ellipse>`;
-  const back = `<g>${swing}<g opacity="0">${kitty(0)}<animate attributeName="opacity" values="0;1;0" keyTimes="0;.25;.75" dur="${T * 2}s" calcMode="discrete" repeatCount="indefinite"/></g></g>`;
-  const front = `<g>${swing}<g>${kitty(0)}<animate attributeName="opacity" values="1;0;1" keyTimes="0;.25;.75" dur="${T * 2}s" calcMode="discrete" repeatCount="indefinite"/></g></g>`;
-  return `${shadowEl}${back}${coneRow}${front}`;
+  const GAP = 230;
+  const ducks = [];
+  for (let x = -GAP; x <= W + GAP; x += GAP) ducks.push(c.svg(x, LANE - 6 - c.h * 3, 3));
+  const duckRow = `<g>${ducks.join('')}<animateTransform attributeName="transform" type="translate" from="0 0" to="${-GAP} 0" dur="9s" repeatCount="indefinite"/></g>`;
+  const pup = (f) => cat(f).svg(CX - 14 * S, LANE - 23.5 * S, S);
+  const flap = `<g>${pup(0)}<animate attributeName="opacity" values="1;0;1" keyTimes="0;.8;.9" dur="3s" calcMode="discrete" repeatCount="indefinite"/></g><g opacity="0">${pup(1)}<animate attributeName="opacity" values="0;1;0" keyTimes="0;.8;.9" dur="3s" calcMode="discrete" repeatCount="indefinite"/></g>`;
+  const bobbing = `<animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="2.4s" calcMode="spline" keySplines=".4 0 .6 1;.4 0 .6 1" repeatCount="indefinite"/>`;
+  const ripple = `<ellipse class="smooth" cx="${CX}" cy="${LANE + 4}" rx="90" ry="9" fill="none" stroke="${C.foam}" stroke-width="3"><animate attributeName="rx" values="84;100;84" dur="2.4s" repeatCount="indefinite"/></ellipse>`;
+  return `${duckRow}${ripple}<g>${flap}${bobbing}</g>
+<rect x="0" y="${LANE - 2}" width="${W}" height="${H - LANE + 2}" fill="${C.sea}" opacity=".55"/>
+${waves(LANE + 2, W, { dur: 2.6, color: C.sea, op: 0.9 })}`;
 }
 
 function confetti() {
@@ -145,22 +140,19 @@ export function header(profile, { season, level }) {
   const lines = level.isBirthday ? ['happy birthday ♥', `level up! lv.${level.level}`, ...profile.taglines] : profile.taglines;
   const name = pixelText(profile.name, { x: 48, y: 34, size: 12, fill: C.ink, shadow: C.pale });
   const badge = pixelText(s.label, { x: 862, y: 24, size: 2, fill: C.inkSoft, align: 'right' });
-  const far = skyline(300, 40, s.far, s.farLight);
-  const farRow = `<g>${far.svg(0, ROAD - 120, 3)}${far.svg(900, ROAD - 120, 3)}<animateTransform attributeName="transform" type="translate" from="0 0" to="-900 0" dur="120s" repeatCount="indefinite"/></g>`;
   const sparkles = [[640, 40, C.sky, 0], [600, 150, C.orange, 1.2], [40, 160, C.pink, 2.1]]
     .map(([x, y, col, d]) => `<g opacity="0">${sparkle(col).svg(x, y, 3)}<animate attributeName="opacity" values="0;1;0" dur="3s" begin="${d}s" repeatCount="indefinite"/></g>`).join('');
 
-  const desc = `${profile.name}: a white pixel cat on inline skates slaloms between traffic cones on a Bangkok street (${s.label.toLowerCase()} sky), while a typewriter cycles: ${lines.join(' / ')}`;
+  const desc = `${profile.name}: a white floppy-eared pup floats in a pink swim ring on the open sea with rubber ducks (${s.label.toLowerCase()} sky), while a typewriter cycles: ${lines.join(' / ')}`;
 
   const body = `<rect x="${X0 + 7}" y="${Y0 + 7}" width="${PW}" height="${PH}" rx="20" fill="${C.shadow}" class="smooth"/>
 <g clip-path="url(#card)">
 <rect x="0" y="0" width="${W}" height="${H}" fill="url(#sky)"/>
 <rect x="0" y="0" width="${W}" height="${ROAD}" fill="url(#dots)" opacity=".5"/>
 ${weather(season)}
-${farRow}
 ${season === 'rainy' ? rain() : ''}
-${road(season)}
-${slalom()}
+${sea(season)}
+${float()}
 ${level.isBirthday ? confetti() : ''}
 ${sparkles}
 ${name.svg}
